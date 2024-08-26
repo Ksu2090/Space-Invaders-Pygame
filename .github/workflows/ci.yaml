@@ -1,5 +1,4 @@
-yaml
-name: Lint and Format Python Code
+name: Python package
 
 on:
   push:
