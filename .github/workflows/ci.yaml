@@ -1,33 +1,37 @@
-name: Python package2
+yaml
+name: Lint and Format Python Code
 
 on:
   push:
-    branches: [ master ]
+    branches:
+      - main  # Убедитесь, что у вас указана нужная ветка
   pull_request:
-    branches: [ master ]
+    branches:
+      - main
+
 jobs:
-     lint:
-       runs-on: ubuntu-latest
-       steps:
-         - name: Checkout code
-           uses: actions/checkout@v2
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-         - name: Set up Python
-           uses: actions/setup-python@v2
-           with:
-             python-version: '3.12'  # Укажите версию Python, используемую в вашем проекте
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.12'  # Убедитесь, что версия Python соответствует той, что указана в pyproject.toml
 
-         - name: Install Poetry
-           run: curl -sSL https://install.python-poetry.org | python3 -
+      - name: Install Poetry
+        run: curl -sSL https://install.python-poetry.org | python3 -
 
-         - name: Add Poetry to PATH
-           run: echo "$HOME/.local/bin" >> $GITHUB_PATH
+      - name: Add Poetry to PATH
+        run: echo "$HOME/.local/bin" >> $GITHUB_PATH
 
-         - name: Install dependencies
-           run: poetry install
+      - name: Install dependencies
+        run: poetry install
 
-         - name: Run Black
-           run: poetry run black .
+      - name: Run Flake8
+        run: poetry run flake8 .
 
-         - name: Run Flake8
-           run: poetry run flake8 --check .
+      - name: Run Black
+        run: poetry run black --check .
