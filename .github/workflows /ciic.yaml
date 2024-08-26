@@ -1,0 +1,33 @@
+name: Python package
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+jobs:
+     lint:
+       runs-on: ubuntu-latest
+       steps:
+         - name: Checkout code
+           uses: actions/checkout@v2
+
+         - name: Set up Python
+           uses: actions/setup-python@v2
+           with:
+             python-version: '3.12'  # Укажите версию Python, используемую в вашем проекте
+
+         - name: Install Poetry
+           run: curl -sSL https://install.python-poetry.org | python3 -
+
+         - name: Add Poetry to PATH
+           run: echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+         - name: Install dependencies
+           run: poetry install
+
+         - name: Run Black
+           run: poetry run black .
+
+         - name: Run Flake8
+           run: poetry run flake8 --check .
